@@ -1,6 +1,7 @@
 ##install.packages("dplyr", dependencies=TRUE)
 library(dplyr)
 library(xtable)
+library(lattice)
 
 dat <- read.csv("./activity.csv")
 dat1 <- filter(dat, steps!='NA')
@@ -57,4 +58,28 @@ dat_mean <- mean(dat2$steps)
 dat_med <- median(dat2$steps)
 dat_mean <- summarise(group_by(dat1, date), mean(steps))
 dat_med <- summarise(group_by(dat1, date), median(steps))
+
+## weekdays versus weekends
+x <- weekdays(as.Date(Sys.Date))
+dat_weekday <- mutate(dat_na_final, weekday = weekdays(as.Date(date)))
+dat_weekday$weekday[which(dat_weekday$weekday=="Monday")]<-"Weekday"
+dat_weekday$weekday[which(dat_weekday$weekday=="Tuesday")]<-"Weekday"
+dat_weekday$weekday[which(dat_weekday$weekday=="Wednesday")]<-"Weekday"
+dat_weekday$weekday[which(dat_weekday$weekday=="Thursday")]<-"Weekday"
+dat_weekday$weekday[which(dat_weekday$weekday=="Friday")]<-"Weekday"
+dat_weekday$weekday[which(dat_weekday$weekday=="Saturday")]<-"Weekend"
+dat_weekday$weekday[which(dat_weekday$weekday=="Sunday")]<-"Weekend"
+
+## First we group the dat_weekday data frame by weekday and interval with the mean(steps)
+## Then we plot the data using some mystical magic.
+dat_weekday_summary <- summarise(group_by(dat_weekday, weekday, interval), sum(steps))
+names(dat_weekday_summary)[names(dat_weekday_summary)=="sum(steps)"] <- "steps"
+
+xyplot(steps ~ interval| weekday, 
+       data = dat_weekday_summary,
+       type = "l",
+       xlab = "Interval",
+       ylab = "Number of steps",
+       layout=c(1,2))
+
 

@@ -165,5 +165,38 @@ For this part the weekdays() function may be of some help here. Use the dataset 
 
 ###Create a new factor variable in the dataset with two levels – “weekday” and “weekend” indicating whether a given date is a weekday or weekend day.
 
+First we will create a new column containing the day of the week and then we will replace the day with weekday and weekend.  Not real elegant, but does the job.
+
+
+```r
+dat_weekday <- mutate(dat_na_final, weekday = weekdays(as.Date(date)))
+dat_weekday$weekday[which(dat_weekday$weekday=="Monday")]<-"Weekday"
+dat_weekday$weekday[which(dat_weekday$weekday=="Tuesday")]<-"Weekday"
+dat_weekday$weekday[which(dat_weekday$weekday=="Wednesday")]<-"Weekday"
+dat_weekday$weekday[which(dat_weekday$weekday=="Thursday")]<-"Weekday"
+dat_weekday$weekday[which(dat_weekday$weekday=="Friday")]<-"Weekday"
+dat_weekday$weekday[which(dat_weekday$weekday=="Saturday")]<-"Weekend"
+dat_weekday$weekday[which(dat_weekday$weekday=="Sunday")]<-"Weekend"
+```
+
 ###Make a panel plot containing a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all weekday days or weekend days (y-axis). See the README file in the GitHub repository to see an example of what this plot should look like using simulated data.
 
+First we group the dat_weekday data frame by weekday and interval with the mean(steps)
+Then we plot the data using some the lattice ploting package.
+
+
+```r
+library(lattice)
+
+dat_weekday_summary <- summarise(group_by(dat_weekday, weekday, interval), sum(steps))
+names(dat_weekday_summary)[names(dat_weekday_summary)=="sum(steps)"] <- "steps"
+
+xyplot(steps ~ interval| weekday, 
+       data = dat_weekday_summary,
+       type = "l",
+       xlab = "Interval",
+       ylab = "Number of steps",
+       layout=c(1,2))
+```
+
+![plot of chunk unnamed-chunk-11](./Assignment1_files/figure-html/unnamed-chunk-11.png) 
