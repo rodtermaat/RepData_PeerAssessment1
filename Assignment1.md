@@ -4,6 +4,7 @@ November 10, 2014
 
 ##Loading and preprocessing the data.
 ###1. Load the data (ie. read.csv( ))
+Note:  assumes the file is available and unzipped in the working directory of the R session
 
 ```r
 dat <- read.csv("./activity.csv")
@@ -11,13 +12,11 @@ dat <- read.csv("./activity.csv")
 
 
 ###2. Process/transform the data (if necessary) into a format suitable for your analysis
-The process of loading and preprocessing the data requires that the activity.csv 
-be available in the working directory of your script.
+Note:  the dplyr package is used to manipulate the data in order to preform the required task
 
 
 ```r
 ##install.packages("dplyr", dependencies=TRUE)
-## this package is used to summarize and group data for analysis
 library(dplyr)
 ```
 
@@ -55,11 +54,6 @@ hist(dat2$'steps',
 
 ![plot of chunk unnamed-chunk-3](./Assignment1_files/figure-html/unnamed-chunk-3.png) 
 
-```r
-dat_mean <- round(mean(dat2$steps),2)
-dat_med <- median(dat2$steps)
-```
-
 ###2. Calculate and report the mean and median total number of steps taken per day
 
 
@@ -73,6 +67,7 @@ The average (mean) number of steps total per day is 1.0766 &times; 10<sup>4</sup
 
 ##What is the average daily activity pattern?
 ###1. Make a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all days (y-axis)
+Note:  Group the data by interval and mean steps before graghing
 
 
 ```r
@@ -84,6 +79,7 @@ title(main = "Average Steps per Interval")
 ![plot of chunk unnamed-chunk-5](./Assignment1_files/figure-html/unnamed-chunk-5.png) 
 
 ###2. Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
+Note:  order the data by inteval and mean steps descending, then use the first record to answer the question.
 
 
 ```r
@@ -101,6 +97,7 @@ The 5-minute interval containing the maximum number of steps is interval 835 and
 Note that there are a number of days/intervals where there are missing values (coded as NA). The presence of missing days may introduce bias into some calculations or summaries of the data.
 
 ###1. Calculate and report the total number of missing values in the dataset (i.e. the total number of rows with NAs)
+Note:  create a data set of just the NA values
 
 
 ```r
@@ -157,7 +154,7 @@ The average (mean) number of steps total per day is 1.0766 &times; 10<sup>4</sup
 NA values replaced with mean steps
 The average (mean) number of steps total per day is 1.0766 &times; 10<sup>4</sup> and the median is 1.0762 &times; 10<sup>4</sup>.
 
-This is as expected as the mean steps are reinforced by introducing additional mean values for previous NA values.  The median is slightly lower as expected since the average values naturally appear in the center of the range thereby decreasing the calculated median.
+This is as expected as the mean steps are reinforced by introducing additional mean values for previous NA values.  The median is slightly lower as expected since the average values naturally appear in the center of the range thereby decreasing the calculated median.  This can also be seen by comparing the 2 histograms in the assignment.
 
 ##Are there differences in activity patterns between weekdays and weekends?
 
